@@ -1,29 +1,38 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "build"
-            }
-        },
-        {
-            "src": "pages/api/**/*",
-            "use": "@vercel/node"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/pages/api/$1"
-        },
-        {
-            "handle": "filesystem"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "/index.html"
-        }
-    ]
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    },
+    { "src": "pages/api/auth_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/users_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/teams_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/events_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/event_categories_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/event_registrations_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/event_redirects_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/creator_requests_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/favorites_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/follows_handler.ts", "use": "@vercel/node" },
+    { "src": "pages/api/supervisor_guests_handler.ts", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/auth/(.*)", "dest": "/pages/api/auth_handler.ts?action=$1" },
+    { "src": "/api/users/(.*)", "dest": "/pages/api/users_handler.ts?action=$1" },
+    { "src": "/api/teams/(.*)", "dest": "/pages/api/teams_handler.ts?action=$1" },
+    { "src": "/api/events/(.*)", "dest": "/pages/api/events_handler.ts?action=$1" },
+    { "src": "/api/event-categories/(.*)", "dest": "/pages/api/event_categories_handler.ts?action=$1" },
+    { "src": "/api/event-registrations/(.*)", "dest": "/pages/api/event_registrations_handler.ts?action=$1" },
+    { "src": "/api/event-redirects/(.*)", "dest": "/pages/api/event_redirects_handler.ts?action=$1" },
+    { "src": "/api/creator-requests/(.*)", "dest": "/pages/api/creator_requests_handler.ts?action=$1" },
+    { "src": "/api/favorites/(.*)", "dest": "/pages/api/favorites_handler.ts?action=$1" },
+    { "src": "/api/follows/(.*)", "dest": "/pages/api/follows_handler.ts?action=$1" },
+    { "src": "/api/supervisor-guests/(.*)", "dest": "/pages/api/supervisor_guests_handler.ts?action=$1" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
 }
