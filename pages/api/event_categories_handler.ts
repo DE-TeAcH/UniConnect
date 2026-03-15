@@ -1,15 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import create from './_logic/event-categories/create';
+import deleteCategory from './_logic/event-categories/delete';
+import get from './_logic/event-categories/get';
+import update from './_logic/event-categories/update';
+
+const handlers: any = {
+    'create': create,
+    'delete': deleteCategory,
+    'get': get,
+    'update': update
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const { action } = req.query;
-    if (!action || typeof action !== 'string') {
-        return res.status(400).json({ success: false, message: 'Action is required' });
+    if (!action || typeof action !== 'string' || !handlers[action]) {
+        return res.status(404).json({ success: false, message: `Endpoint /api/event-categories/${action} not found` });
     }
 
     try {
-        const { default: actionHandler } = await import(`./_logic/event-categories/${action}`);
-        return await actionHandler(req, res);
-    } catch (err) {
-        return res.status(404).json({ success: false, message: 'Endpoint not found' });
+        return await handlers[action](req, res);
+    } catch (err: any) {
+        console.error(`Event Categories API error (${action}):`, err);
+        return res.status(500).json({ success: false, message: 'Internal server error', error: err.message });
     }
 }
