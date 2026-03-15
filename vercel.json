@@ -1,14 +1,26 @@
 {
-    "buildCommand": "vite build",
-    "outputDirectory": "build",
-    "rewrites": [
+    "version": 2,
+    "builds": [
         {
-            "source": "/api/:path*",
-            "destination": "/api/:path*"
+            "src": "package.json",
+            "use": "@vercel/static-build",
+            "config": {
+                "distDir": "build"
+            }
         },
         {
-            "source": "/(.*)",
-            "destination": "/index.html"
+            "src": "api/**/*",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "/api/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
         }
     ]
 }
