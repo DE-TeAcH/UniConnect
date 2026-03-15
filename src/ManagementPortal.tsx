@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Toaster } from './components/ui/sonner';
 import { Layout } from './components/Layout';
 import { LoginPage } from './components/LoginPage';
 import { AdminDashboard } from './components/AdminDashboard';
@@ -204,19 +203,16 @@ export default function ManagementPortal() {
     }
 
     return (
-        <>
-            <Layout
-                currentPage={currentPage}
-                userRole={currentUser.role}
-                teamName={currentUser.teamName}
-                userName={currentUser.name}
-                userAvatar={currentUser.avatar}
-                onNavigate={handleNavigate}
-                onLogout={handleLogout}
-            >
-                {renderPage()}
-            </Layout>
-            <Toaster />
-        </>
+        <Layout
+            currentPage={currentPage}
+            userRole={currentUser.role}
+            teamName={currentUser.teamName}
+            userName={currentUser.name}
+            userAvatar={currentUser.avatar}
+            onNavigate={handleNavigate}
+            onLogout={handleLogout}
+        >
+            {renderPage()}
+        </Layout>
     );
 }

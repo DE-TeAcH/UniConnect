@@ -320,14 +320,14 @@ export function AdminUsers() {
     // basic bac matricule validation: must be empty or exactly 8 digits
     const matricule = editUser.bacMatricule?.trim();
     if (matricule && !/^\d{8}$/.test(matricule)) {
-      alert('Bac matricule must be exactly 8 digits.');
+      toast.error('Bac matricule must be exactly 8 digits.');
       return;
     }
 
     // bac year validation (optional): should be a reasonable 4-digit year if provided
     const yearStr = editUser.bacYear?.trim();
     if (yearStr && !/^\d{4}$/.test(yearStr)) {
-      alert('Bac year must be a 4-digit year (e.g. 2018).');
+      toast.error('Bac year must be a 4-digit year (e.g. 2018).');
       return;
     }
 
@@ -358,12 +358,13 @@ export function AdminUsers() {
         setIsEditDialogOpen(false);
         setSelectedUser(null);
         fetchData();
+        toast.success('User updated successfully!');
       } else {
-        alert(response.message || 'Failed to update user');
+        toast.error(response.message || 'Failed to update user');
       }
     } catch (error) {
       console.error('Error updating user:', error);
-      alert('Failed to update user');
+      toast.error('Failed to update user');
     }
   };
 
@@ -373,7 +374,7 @@ export function AdminUsers() {
       const joinYear = new Date(newUser.joinDate).getFullYear();
       const bacYearNum = Number(newUser.bacYear);
       if (joinYear < bacYearNum) {
-        alert('Join date cannot be before the Baccalaureate year.');
+        toast.error('Join date cannot be before the Baccalaureate year.');
         return;
       }
     }
@@ -397,11 +398,12 @@ export function AdminUsers() {
           fetchData();
           setNewUser({ name: '', username: '', password: '', team: '', role: 'member', email: '', joinDate: '', bacMatricule: '', bacYear: '' });
           setIsAddDialogOpen(false);
+          toast.success('User created successfully!');
         } else {
-          alert(response.message || 'Failed to create user');
+          toast.error(response.message || 'Failed to create user');
         }
       } catch (error) {
-        alert('Failed to create user');
+        toast.error('Failed to create user');
       }
     }
   };

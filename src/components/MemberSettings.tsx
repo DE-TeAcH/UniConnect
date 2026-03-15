@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Switch } from './ui/switch';
 import { Separator } from './ui/separator';
 import { User, Mail, Lock, Trash2, AlertTriangle, UserCog } from 'lucide-react';
+import { toast } from 'sonner';
 import { api } from '../services/api';
 
 interface MemberSettingsProps {
@@ -78,52 +79,50 @@ export function MemberSettings({ currentUser, onLogout, onProfileUpdate }: Membe
 
     const handleUpdateProfile = async () => {
         if (!usernameStatus.isAvailable) {
-            alert('Please choose an available username.');
+            toast.error('Please choose an available username.');
             return;
         }
 
         try {
-            const response = await api.users.update(currentUser.id, {
+            const response = await api.users.update(String(currentUser.id), {
                 name: profileData.name,
                 username: profileData.username,
             });
 
             if (response.success) {
                 onProfileUpdate({ name: profileData.name, username: profileData.username });
-                setIsSuccessDialogOpen(true);
-                setTimeout(() => setIsSuccessDialogOpen(false), 2000);
+                toast.success('Profile updated successfully!');
             } else {
-                alert(response.message || 'Failed to update profile.');
+                toast.error(response.message || 'Failed to update profile.');
             }
         } catch (error) {
-            alert('An error occurred while updating profile.');
+            toast.error('An error occurred while updating profile.');
         }
     };
 
     const handleChangePassword = async () => {
         if (passwordData.newPassword !== passwordData.confirmPassword) {
-            alert('New passwords do not match!');
+            toast.error('New passwords do not match!');
             return;
         }
         if (passwordData.newPassword.length < 6) {
-            alert('Password must be at least 6 characters long!');
+            toast.error('Password must be at least 6 characters long!');
             return;
         }
 
         try {
-            const response = await api.users.update(currentUser.id, {
+            const response = await api.users.update(String(currentUser.id), {
                 password: passwordData.newPassword
             });
 
             if (response.success) {
                 setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                setIsSuccessDialogOpen(true);
-                setTimeout(() => setIsSuccessDialogOpen(false), 2000);
+                toast.success('Password updated successfully!');
             } else {
-                alert(response.message || 'Failed to update password.');
+                toast.error(response.message || 'Failed to update password.');
             }
         } catch (error) {
-            alert('An error occurred while changing password.');
+            toast.error('An error occurred while changing password.');
         }
     };
 
@@ -131,7 +130,7 @@ export function MemberSettings({ currentUser, onLogout, onProfileUpdate }: Membe
         // Validation for team leader delegation
         if (currentUser.role === 'team-leader') {
             if (hasSuccessor && (!successorFullName.trim() || !successorUsername.trim())) {
-                alert('Please provide both the full name and username of the successor.');
+                toast.error('Please provide both the full name and username of the successor.');
                 return;
             }
             if (hasSuccessor) {
@@ -141,21 +140,21 @@ export function MemberSettings({ currentUser, onLogout, onProfileUpdate }: Membe
 
         // Validate confirmation text
         if (deleteConfirmation !== 'DELETE') {
-            alert('Please type DELETE to confirm account deletion.');
+            toast.error('Please type DELETE to confirm account deletion.');
             return;
         }
 
         try {
-            const response = await api.users.delete(currentUser.id);
+            const response = await api.users.delete(String(currentUser.id));
             if (response.success) {
-                alert(`Account deleted successfully. ${hasSuccessor ? `${successorFullName} has been assigned as your successor.` : ''}`);
+                toast.success(`Account deleted successfully.${hasSuccessor ? ` ${successorFullName} has been assigned as your successor.` : ''}`);
                 setIsDeleteDialogOpen(false);
                 onLogout();
             } else {
-                alert(response.message || 'Failed to delete account.');
+                toast.error(response.message || 'Failed to delete account.');
             }
         } catch (error) {
-            alert('An error occurred while deleting account.');
+            toast.error('An error occurred while deleting account.');
         }
     };
 

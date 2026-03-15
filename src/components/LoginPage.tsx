@@ -3,8 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from './ui/alert';
+import { toast } from 'sonner';
 import { api } from '../services/api';
 import LightLogo from '../assets/UniConnect_VLight.png';
 import DarkLogo from '../assets/UniConnect_Dark.png';
@@ -16,13 +15,11 @@ interface LoginPageProps {
 export function LoginPage({ onLogin }: LoginPageProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
 
     try {
       const response = await api.auth.login(username.trim(), password);
@@ -41,10 +38,10 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           manage: user.manage,
         });
       } else {
-        setError(response.message || 'Invalid username or password.');
+        toast.error(response.message || 'Invalid username or password.');
       }
     } catch (err) {
-      setError('Server error. Please try again later.');
+      toast.error('Server error. Please try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -74,13 +71,6 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   <Label htmlFor="password">Password</Label>
                   <Input id="password" type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required disabled={isLoading} />
                 </div>
-
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
 
                 <Button type="submit" className="w-full bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl mb-4" disabled={isLoading}>
                   {isLoading ? 'Signing in...' : 'Sign In'}
