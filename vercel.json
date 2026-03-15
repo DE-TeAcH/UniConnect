@@ -8,13 +8,11 @@
         "distDir": "build"
       }
     },
-    { "src": "api/index.ts", "use": "@vercel/node" },
-    { "src": "api/hello.js", "use": "@vercel/node" }
+    { "src": "api/index.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/api/hello", "dest": "/api/hello.js" },
-    { "src": "/api/ping", "dest": "/api/index.ts?category=ping" },
-    { "src": "/api/([^/]+)/([^/]+)", "dest": "/api/index.ts?category=$1&action=$2" },
+    { "src": "/api/ping", "dest": "/api/index.js?category=ping" },
+    { "src": "/api/([^/]+)/([^/]+)", "dest": "/api/index.js?category=$1&action=$2" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
