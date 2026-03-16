@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { runCors } from '../../utils/cors';
 import { sendResponse } from '../../utils/response';
 import { verifyPin } from '../../utils/pinStore';
